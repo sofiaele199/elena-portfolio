@@ -181,7 +181,10 @@ h2 b{font-weight:500}
 .chips.f .chip.on i{background:var(--olive)}
 
 /* about */
-.about{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,6vw,96px)}
+#work{padding-bottom:clamp(48px,6vw,96px)}
+#about{padding-block:clamp(24px,3vw,48px) clamp(64px,7vw,110px)}
+.about{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);align-items:center}
+#about .kicker:before{display:none}
 .about p{font-size:clamp(19px,1.8vw,24px);line-height:1.45;letter-spacing:-.015em;margin:0 0 18px;max-width:34ch}
 .about p .o{color:var(--olive)}
 .edu{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
