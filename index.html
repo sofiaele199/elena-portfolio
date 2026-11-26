@@ -158,11 +158,27 @@ h2 b{font-weight:500}
 .panel dt{color:var(--mute);padding-right:22px;white-space:nowrap}
 .panel dd{margin:0}
 
-/* tools marquee */
-.tools{border-block:1px solid var(--line);padding-block:26px;overflow:hidden;white-space:nowrap}
-.tools .track{display:inline-flex;gap:14px;will-change:transform}
-.tools span{font-size:clamp(22px,2.6vw,34px);font-weight:300;letter-spacing:-.03em;display:inline-flex;align-items:center;gap:14px}
-.tools span:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--olive)}
+/* toolkit */
+.kit{padding-top:0}
+.kitg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(32px,6vw,96px);align-items:start;border-top:1px solid var(--line);padding-top:clamp(56px,7vw,110px)}
+.kitg h2{font-size:clamp(32px,4.2vw,60px)}
+.kitp{color:var(--mute);font-size:clamp(17px,1.4vw,19px);max-width:38ch;margin:22px 0 36px}
+.cats{border-top:1px solid var(--ink)}
+.cat{display:flex;align-items:baseline;gap:16px;width:100%;padding:16px 0;border-bottom:1px solid var(--line);text-align:left;font-size:clamp(20px,2vw,28px);font-weight:300;letter-spacing:-.03em;transition:color .3s,padding .5s cubic-bezier(.2,.8,.2,1)}
+.cat .n,.cat .c{font-size:12px;letter-spacing:0;color:var(--mute)}
+.cat .c{margin-left:auto}
+.cat:hover,.cat.hi{color:var(--olive);padding-left:10px}
+.cat[aria-pressed="true"]{color:var(--olive);padding-left:18px}
+.cat[aria-pressed="true"] .n:before{content:"\2192  "}
+.chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:clamp(15px,1.3vw,18px);transition:opacity .5s,translate .7s cubic-bezier(.2,.8,.2,1),transform .5s cubic-bezier(.2,.8,.2,1),background .3s,color .3s,border-color .3s;transition-delay:calc(var(--d)*1ms)}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .3s}
+.chip:hover{border-color:var(--olive)}.chip:hover i{background:var(--olive)}
+.js .chips:not(.in) .chip{opacity:0;translate:0 16px}
+.chips.done .chip{transition-delay:0s}
+.chips.f .chip{opacity:.28;transform:scale(.94)}
+.chips.f .chip.on{opacity:1;transform:none;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips.f .chip.on i{background:var(--olive)}
 
 /* about */
 .about{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,6vw,96px)}
@@ -193,7 +209,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 @media(pointer:fine){.cur{display:block}}
 
 @media(max-width:900px){
-.intro,.mgrid,.about{grid-template-columns:minmax(0,1fr)}
+.intro,.mgrid,.about,.kitg{grid-template-columns:minmax(0,1fr)}
 .visual{position:relative;top:0;height:auto;aspect-ratio:1/0.82}
 .built{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .row{grid-template-columns:minmax(0,1fr) auto}
@@ -214,6 +230,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 @media(prefers-reduced-motion:reduce){
 html{scroll-behavior:auto}
 .split .w>span,.js .fade{transform:none!important;opacity:1!important;transition:none}
+.js .chips .chip{opacity:1;translate:none}
 .loader{display:none}
 }
 </style>
@@ -296,8 +313,6 @@ html{scroll-behavior:auto}
   </div>
 </section>
 
-<div class="tools" aria-label="Toolkit"><div class="track" id="tools"></div></div>
-
 <section class="band" id="about">
   <div class="wrap about">
     <div>
@@ -311,6 +326,18 @@ html{scroll-behavior:auto}
       <li><b>Vogue College of Fashion</b><span>Digital Marketing for Fashion and Luxury</span></li>
       <li><b>HubSpot Academy</b><span>Digital Marketing Certification</span></li>
     </ul>
+  </div>
+</section>
+
+<section class="band kit" id="toolkit">
+  <div class="wrap kitg">
+    <div>
+      <div class="kicker mono">Toolkit</div>
+      <h2 class="split">Commerce on one side, <b>code on the other.</b></h2>
+      <p class="kitp fade">I use AI-assisted development to ship custom features fast, then verify every change before it goes live.</p>
+      <div class="cats fade" id="cats" role="group" aria-label="Filter tools by category"></div>
+    </div>
+    <ul class="chips" id="chips" aria-label="Tools"></ul>
   </div>
 </section>
 
@@ -438,11 +465,23 @@ document.getElementById("dClose").addEventListener("click",closeP);
 document.getElementById("shade").addEventListener("click",closeP);
 addEventListener("keydown",e=>{if(e.key==="Escape"){closeP();setMenu(false)}});
 
-/* tools marquee */
-const T=["Shopify","Klaviyo","GA4","Google Ads","Merchant Center","Meta Ads","ShopMy","Make","Telegram bots","HTML","CSS","JavaScript","WordPress","GitHub","Vercel","Claude Code","Codex","ChatGPT","Adobe CC","Canva"];
-const tr=document.getElementById("tools");tr.innerHTML=[...T,...T].map(t=>`<span>${esc(t)}</span>`).join("");
-let tm=0;const tl=()=>{tm-=.5;const w=tr.scrollWidth/2;if(-tm>w)tm+=w;tr.style.transform=`translateX(${tm}px)`;requestAnimationFrame(tl)};
-if(!reduce)requestAnimationFrame(tl);
+/* toolkit */
+const K=[["Commerce and growth",["Shopify","Shopify POS","Klaviyo","GA4","Google Ads","Merchant Center","Meta Ads","ShopMy"]],["Build",["HTML","CSS","JavaScript","WordPress","GitHub","Vercel","Claude Code","Codex","ChatGPT"]],["Automation and design",["Make","Telegram bots","Adobe Creative Cloud","Canva"]]];
+const cats=document.getElementById("cats"),chips=document.getElementById("chips");
+cats.innerHTML=[["All tools",K.flatMap(k=>k[1])],...K].map(([n,l],i)=>`<button class="cat" type="button" data-c="${i-1}" aria-pressed="${!i}"><span class="n mono">${String(i).padStart(2,"0")}</span>${esc(n)}<span class="c mono">${l.length}</span></button>`).join("");
+let ci=0;chips.innerHTML=K.flatMap((k,c)=>k[1].map(t=>`<li class="chip" data-c="${c}" data-i="${ci}" style="--d:${ci++*40}"><i></i>${esc(t)}</li>`)).join("");
+let sel=-1;
+const show=c=>{chips.classList.toggle("f",c>=0);chips.querySelectorAll(".chip").forEach(el=>el.classList.toggle("on",+el.dataset.c===c))};
+const pick=c=>{sel=c;cats.querySelectorAll(".cat").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.c===c));
+ const els=[...chips.children],first=new Map(els.map(e=>[e,e.getBoundingClientRect()]));
+ els.sort((a,b)=>((+b.dataset.c===c)-(+a.dataset.c===c))||(a.dataset.i-b.dataset.i)).forEach(e=>chips.append(e));show(c);
+ if(!reduce)els.forEach(e=>{const a=first.get(e),b=e.getBoundingClientRect(),dx=a.left-b.left,dy=a.top-b.top;if(dx||dy)e.animate([{translate:`${dx}px ${dy}px`},{translate:"0 0"}],{duration:750,easing:"cubic-bezier(.2,.8,.2,1)"})})};
+cats.addEventListener("click",e=>{const b=e.target.closest(".cat");if(b){const c=+b.dataset.c;pick(c===sel?-1:c)}});
+cats.addEventListener("pointerover",e=>{const b=e.target.closest(".cat");if(b&&fine)show(+b.dataset.c)});
+cats.addEventListener("pointerleave",()=>show(sel));
+chips.addEventListener("pointerover",e=>{const ch=e.target.closest(".chip");cats.querySelectorAll(".cat").forEach(b=>b.classList.toggle("hi",!!ch&&b.dataset.c===ch.dataset.c))});
+chips.addEventListener("pointerleave",()=>cats.querySelectorAll(".hi").forEach(b=>b.classList.remove("hi")));
+new IntersectionObserver((es,o)=>es.forEach(e=>{if(!e.isIntersecting)return;chips.classList.add("in");setTimeout(()=>chips.classList.add("done"),1600);o.disconnect()}),{threshold:.15}).observe(chips);
 
 /* phone parallax */
 const phone=document.getElementById("phone");
